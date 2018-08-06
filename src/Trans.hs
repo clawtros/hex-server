@@ -28,16 +28,17 @@ addPlayer (Playing s plays p op c) _ = Playing s plays p op c
 addPlayer (Finished p) _ = Finished p
 
 
-drawColor :: Color -> Char
-drawColor Red = 'R'
-drawColor Blue = 'B'
+drawColor :: Color -> String
+drawColor Red = "R"
+drawColor Blue = "B"
 
 
 drawBoard :: Int -> [Play] -> String
 drawBoard size plays =
   concat ['\n' : [' ' | _ <- [1..y]] ++
-          List.intercalate " " [[maybe '_' drawColor (Map.lookup (x, y) playMap)]
-                               | x <- [0..(size - 1)]]
+          List.intercalate " "
+           [maybe "_" drawColor (Map.lookup (x, y) playMap)
+           | x <- [0..(size - 1)]]
          | y <- [0..(size - 1)]]
   where playMap = Map.fromList plays
 
@@ -45,6 +46,13 @@ drawBoard size plays =
 newGame :: GameState
 newGame = 
   New
+
+
+neighbors :: (Int, Int) -> [(Int, Int)]
+neighbors (x, y) =
+  map (\(xoff, yoff) -> (x + xoff, y + yoff))
+  [(0, (-1)), (1, (-1)), ((-1), 0), (1, 0), ((-1), 1), (0, 1)]
+  
 
 main :: IO ()
 main =
