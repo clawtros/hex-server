@@ -53,7 +53,7 @@ disconnectClient clientId stateRef = Concurrent.modifyMVar_ stateRef $ \state ->
   return $ withoutClient clientId state
 
 listen :: WS.Connection -> ClientId -> Concurrent.MVar State -> IO ()
-listen conn clientId stateRef = Monad.forever $ do
+listen conn clientId stateRef = Monad.forever $
   WS.receiveData conn >>= broadcast clientId stateRef
 
 broadcast :: ClientId -> Concurrent.MVar State -> Text.Text -> IO ()
